@@ -3,7 +3,6 @@ import pandas as pd
 from spellchecker import SpellChecker
 from nltk.stem import PorterStemmer
 import numpy as np
-import os
 import re
 
 ps = PorterStemmer()
@@ -24,7 +23,7 @@ def load_csv(filepath):
     
 def tokenize(text):
     '''Tokenization using a regex.'''
-    tokens = pd.array(re.split(r'[;,.!?\s"[0-9]()]+', text))
+    tokens = pd.array(re.split(r'[;,.!?\s"()]+', text))
     return tokens
 
 def spellcheck_and_stem(tokens):
