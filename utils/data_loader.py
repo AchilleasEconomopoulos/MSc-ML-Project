@@ -1,3 +1,5 @@
+'''A module for all the utility functions and tools used in the Notebooks.'''
+
 import pandas as pd
 from spellchecker import SpellChecker
 from nltk.stem import PorterStemmer
@@ -10,9 +12,9 @@ from scipy.sparse import hstack
 import os
 
 
-ps = PorterStemmer()
-spell = SpellChecker()
-wnl = WordNetLemmatizer()
+ps = PorterStemmer()        # Stemming
+spell = SpellChecker()      # Spellchecking (for inference)
+wnl = WordNetLemmatizer()   # Lemmatization (not used)
 
 def load_csv(filepath,lexicon=True,pos=False):
     '''Simple method that loads the (intended) csv
@@ -43,9 +45,10 @@ def custom_tokenizer(text):
     vectorizer_default = r"(?u)\b\w\w+\b\'?\w*" 
     number_elimination = r"\b\w*\d\w*\b"
     underscore_elimination = r"_"
-    tokens = re.findall(f"{vectorizer_default}|{first_person}", text)
-    tokens = [t for t in tokens if not re.match(f'{number_elimination}|{underscore_elimination}', t)]
-    tokens = [ps.stem(token) for token in tokens]
+
+    tokens = re.findall(f"{vectorizer_default}|{first_person}", text) # Get the tokens matching the base regex
+    tokens = [t for t in tokens if not re.match(f'{number_elimination}|{underscore_elimination}', t)] # Eliminate number and underscore tokens
+    tokens = [ps.stem(token) for token in tokens] # Stem what's left
     # tokens = [wnl.lemmatize(token) for token in tokens]
     return tokens
 
@@ -61,20 +64,20 @@ def spellcheck(tokens):
     return pd.array(spellchecked_tokens)
 
 
-def extract_pos_features(text):
-    """Extracts % of nouns, verbs, adjectives, adverbs."""
-    doc = nlp(text)
-    total_tokens = len(doc)
+# def extract_pos_features(text):
+#     """Extracts % of nouns, verbs, adjectives, adverbs."""
+#     doc = nlp(text)
+#     total_tokens = len(doc)
     
-    pos_counts = {
-        "NOUN": sum(1 for token in doc if token.pos_ == "NOUN"),
-        "VERB": sum(1 for token in doc if token.pos_ == "VERB"),
-        "ADJ": sum(1 for token in doc if token.pos_ == "ADJ"),
-        "ADV": sum(1 for token in doc if token.pos_ == "ADV")
-    }
+#     pos_counts = {
+#         "NOUN": sum(1 for token in doc if token.pos_ == "NOUN"),
+#         "VERB": sum(1 for token in doc if token.pos_ == "VERB"),
+#         "ADJ": sum(1 for token in doc if token.pos_ == "ADJ"),
+#         "ADV": sum(1 for token in doc if token.pos_ == "ADV")
+#     }
     
-    # Normalize counts to percentages
-    return np.array([pos_counts["NOUN"], pos_counts["VERB"], pos_counts["ADJ"], pos_counts["ADV"]]) / total_tokens
+#     # Normalize counts to percentages
+#     return np.array([pos_counts["NOUN"], pos_counts["VERB"], pos_counts["ADJ"], pos_counts["ADV"]]) / total_tokens
 
 def transform_input(input, vectorizer: TfidfVectorizer, scaler: MinMaxScaler):
     '''
@@ -231,17 +234,3 @@ def _get_lexicon():
 
 #         with open ('tfidf2.json', 'w') as f:
 #             json.dump(self.corpus_tokens, f, indent=4)
-
-
-                
-
-
-        
-
-        
-                 
-                 
-    
-
-
-

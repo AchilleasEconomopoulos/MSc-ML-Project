@@ -4,3 +4,4 @@ nltk
 pyspellchecker
 xgboost
 matplotlib
+ipywidgets
